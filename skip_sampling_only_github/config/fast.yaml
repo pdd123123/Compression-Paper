@@ -1,0 +1,22 @@
+# Same as default.yaml (kept for --config config/fast.yaml compatibility).
+
+video:
+  frame_stride: 2
+  max_height: 720
+
+performance:
+  stream_frames: true
+  embed_batch_size: 16
+  yolo_imgsz: 416
+  skip_input_clip: true
+
+context:
+  history_frames: 15
+  context_size: 3
+
+class_weight:
+  detector_interval: 10
+
+scoring:
+  score_detector_interval: 8
+  selection_mode: threshold

@@ -1,0 +1,29 @@
+# High-quality / slow preset (overrides fast defaults).
+
+video:
+  frame_stride: 1
+  max_height: 0
+
+performance:
+  stream_frames: false
+  embed_batch_size: 1
+  embed_input_size: 224
+  use_fp16: false
+  yolo_imgsz: 640
+  reuse_detections: false
+  skip_input_clip: false
+
+context:
+  history_frames: 30
+  context_size: 5
+
+class_weight:
+  detector_interval: 5
+
+scoring:
+  algorithm: batch
+  selection_mode: diverse
+  score_detector_interval: 1
+
+context:
+  mode: diverse

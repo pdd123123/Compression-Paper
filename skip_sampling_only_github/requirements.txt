@@ -1,0 +1,9 @@
+# Python 3.8+
+numpy>=1.21.0,<1.25.0
+opencv-python>=4.5.0
+scikit-learn>=1.0.0,<1.4.0
+torch>=1.13.0
+torchvision>=0.14.0
+tqdm>=4.66
+PyYAML>=6.0
+ultralytics>=8.0.0

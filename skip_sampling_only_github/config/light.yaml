@@ -1,0 +1,9 @@
+# Algorithmic fast path: motion gate + uniform context (no per-frame K-means).
+
+scoring:
+  algorithm: motion_gated
+  motion_gate_fraction: 0.35
+  semantic_floor_interval: 6
+
+context:
+  mode: uniform

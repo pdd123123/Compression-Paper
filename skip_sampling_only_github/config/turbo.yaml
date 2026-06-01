@@ -1,0 +1,17 @@
+# Aggressive speed preset (on top of default).
+
+video:
+  frame_stride: 3
+  max_height: 540
+
+performance:
+  embed_batch_size: 48
+  embed_input_size: 160
+  yolo_imgsz: 320
+  reuse_detections: true
+
+scoring:
+  score_detector_interval: 16
+
+class_weight:
+  detector_interval: 16

@@ -1,0 +1,9 @@
+outputs/**/*
+!outputs/sample/.gitkeep
+!outputs/adaptive/.gitkeep
+__pycache__/
+*.pyc
+yolov8n.pt
+*.avi
+*.mp4
+.env
