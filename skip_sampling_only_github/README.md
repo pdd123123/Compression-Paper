@@ -16,19 +16,19 @@ Python 3.8+. GPU recommended. First run downloads MobileNet and YOLOv8n weights.
 **Fixed retention** (~20% of processed frames):
 
 ```cmd
-python scripts/run_sample.py -i "C:\Users\Pedram\Desktop\Deng\Compression Paper\skip_sampling_only\DePere_10_19_2020_0700_0900_45to60.avi" --max-frames 500 --retention 0.2
+python scripts/run_sample.py -i your_video.avi --max-frames 500 --retention 0.2
 ```
 
 **Adaptive retention** (varies by scene; busy traffic keeps more):
 
 ```cmd
-python scripts/run_sample_adaptive.py -i "C:\Users\Pedram\Desktop\Deng\Compression Paper\skip_sampling_only\DePere_10_19_2020_0700_0900_45to60.avi" --max-frames 500
+python scripts/run_sample_adaptive.py -i your_video.avi --max-frames 500
 ```
 
 **Debug overlay** (green KEEP / red SKIP on every processed frame):
 
 ```cmd
-python scripts/run_sample_adaptive.py -i "C:\Users\Pedram\Desktop\Deng\Compression Paper\skip_sampling_only\DePere_10_19_2020_0700_0900_45to60.avi" --max-frames 500 --debug-video --open
+python scripts/run_sample_adaptive.py -i your_video.avi --max-frames 500 --debug-video --open
 ```
 
 Omit `--max-frames` to process the whole file (slow; long videos use stream I/O to limit RAM).
