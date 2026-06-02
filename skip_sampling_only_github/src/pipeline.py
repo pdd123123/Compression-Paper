@@ -491,6 +491,9 @@ def run_semantic_sampling(
         "traffic_busy_fraction": getattr(
             sampler.state, "traffic_busy_fraction", 0.0
         ),
+        "information_fraction": getattr(
+            sampler.state, "information_fraction", 0.0
+        ),
     }
     save_manifest(manifest_path, "semantic", indices, meta, scores)
     prog.done(str(manifest_path))
@@ -526,4 +529,6 @@ def run_semantic_sampling(
         "output_video": str(output_video),
         "manifest": str(manifest_path),
         "debug_video": str(debug_video) if debug_video else None,
+        "traffic_busy_fraction": meta.get("traffic_busy_fraction", 0.0),
+        "information_fraction": meta.get("information_fraction", 0.0),
     }

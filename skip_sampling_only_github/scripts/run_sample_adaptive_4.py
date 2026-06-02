@@ -1,13 +1,4 @@
 #!/usr/bin/env python3
-"""Adaptive semantic skip sampling (v4: paper-style stream + K-means context).
-
-Like v3 models/retention, but closer to the SkipComp paper pipeline:
-- algorithm=online: one streaming pass, score each frame as it arrives
-- context.mode=diverse: K-means context set (not uniform sampling)
-- adaptive retention + information-aware bounds (same as v3)
-
-Expect slower than v3 (K-means per frame + no batch embed), often similar quality.
-"""
 
 from __future__ import annotations
 

@@ -1,0 +1,35 @@
+# Paper-aligned compression (same as compression_only/config/paper_aligned.yaml).
+video:
+  max_frames: null
+  frame_stride: 1
+
+soft_edge:
+  canny_low: 60
+  canny_high: 150
+  num_clusters: 8
+  global_palette: true
+  keyframe_interval: 90
+  storage_downscale: 8
+  rgb_keyframe_interval: 0
+
+processing:
+  max_height: 720
+  edge_max_height: 360
+
+codec:
+  zlib_level: 1
+
+delivery:
+  h264_annex: true
+  h264_crf: 28
+  h264_preset: fast
+  h264_max_height: 720
+
+transmit:
+  extra_crf: 2
+
+decompress:
+  playback: h264_annex
+
+paths:
+  output_dir: outputs

@@ -1,0 +1,48 @@
+{
+  "method": "semantic",
+  "n_total": 500,
+  "n_kept": 384,
+  "retention_ratio": 0.768,
+  "size_reduction_pct": 23.2,
+  "tau": 0.3625,
+  "fast_mode": true,
+  "full_source_avi_mb": 376.6776752471924,
+  "input_clip_mb": 28.612643241882324,
+  "sampled_mb": 22.253114700317383,
+  "clip_vs_sampled_reduction_pct": 22.226288175487596,
+  "tx_input_clip_s": 24.0020248,
+  "tx_sampled_s": 18.6672656,
+  "tx_full_avi_s": 315.980136,
+  "input_clip_video": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4_input_500fr.mp4",
+  "output_video": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4_sampled.mp4",
+  "manifest": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4_skip_manifest.json",
+  "debug_video": null,
+  "traffic_busy_fraction": 0.002,
+  "information_fraction": 0.9,
+  "retention_mode": "adaptive_v4",
+  "actual_retention_pct": 76.8,
+  "pipeline_style": {
+    "algorithm": "online",
+    "context_mode": "diverse",
+    "history_frames": 20,
+    "context_size": 4,
+    "stream_frames": true
+  },
+  "model_stack": {
+    "embedding_backbone": "efficientnet_b0",
+    "yolo_model": "yolov8s.pt",
+    "score_detector_interval": 8,
+    "yolo_imgsz": 416
+  },
+  "retention_policy": {
+    "min_retention_ratio": 0.15,
+    "max_retention_ratio": 0.85,
+    "soft_target_retention": 0.3,
+    "busy_objects_threshold": 3,
+    "busy_soft_retention_cap": 0.82,
+    "busy_min_retention_floor": 0.55,
+    "information_aware": true,
+    "traffic_busy_fraction": 0.002,
+    "information_fraction": 0.9
+  }
+}

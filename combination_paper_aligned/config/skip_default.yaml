@@ -1,0 +1,73 @@
+# Default = fast path (stream I/O, batch embed, sparse YOLO).
+# Use --quality or config/quality.yaml for full-resolution scoring every frame.
+
+video:
+  max_frames: null
+  frame_stride: 2
+  max_height: 720   # scoring/detection only; output MP4 is full resolution
+
+performance:
+  stream_frames: true
+  embed_batch_size: 32
+  embed_input_size: 192
+  use_fp16: true
+  yolo_half: true
+  yolo_imgsz: 384
+  reuse_detections: true
+  skip_input_clip: true
+
+embedding:
+  backbone: mobilenet_v3_small
+  embed_dim: 576
+  device: null
+
+context:
+  mode: uniform          # uniform | diverse (diverse = K-means, slower)
+  history_frames: 15
+  context_size: 3
+  cluster_min_samples: 3
+
+class_weight:
+  window_frames: 60
+  detector_interval: 10
+  yolo_model: yolov8n.pt
+  rare_classes:
+    - person
+    - bicycle
+    - motorcycle
+    - bus
+    - truck
+
+scoring:
+  algorithm: batch       # batch | motion_gated | online
+  retention_mode: target_ratio
+  tau: null
+  target_retention_ratio: 0.2
+  tau_warmup_frames: 120
+  novelty_power: 1.0
+  min_score: 0.0
+  selection_mode: threshold
+  min_temporal_gap: 4
+  diversity_sim_penalty: 0.45
+  score_detector_interval: 12
+  detection_score_boost: 0.12
+  motion_blend: 0.35
+  vehicle_presence_floor: 0.2
+  busy_objects_threshold: 2      # >=2 vehicles/people in frame
+  busy_motion_threshold: 0.025 # frame-to-frame motion (0-1)
+  busy_score_floor: 0.35
+  busy_score_boost: 0.15
+
+adaptive:
+  traffic_aware: true            # busy+moving clips keep more frames
+  mad_multiplier: 1.2
+  min_tau_quantile: 0.45
+  flat_quantile: 0.68
+  soft_target_retention: 0.35    # quiet scene baseline
+  busy_soft_retention_cap: 0.62  # target keep ratio when clip is mostly busy
+  busy_min_retention_floor: 0.38 # hard floor when busy
+  min_retention_ratio: 0.12
+  max_retention_ratio: 0.70
+
+paths:
+  output_dir: outputs

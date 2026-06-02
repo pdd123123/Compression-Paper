@@ -1,0 +1,100 @@
+{
+  "input": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\DePere_10_19_2020_0700_0900_45to60.avi",
+  "output_dir": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs",
+  "stem": "DePere_10_19_2020_0700_0900_45to60_adaptive4",
+  "skip_mode": "adaptive_v4",
+  "max_frames": 500,
+  "skip": {
+    "sampled_mp4": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4_sampled.mp4",
+    "manifest": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4_skip_manifest.json",
+    "report": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4_skip_report.json",
+    "input_clip": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4_input_500fr.mp4",
+    "debug_mp4": null,
+    "n_kept": 384,
+    "n_total": 500,
+    "retention_pct": 76.8,
+    "stats": {
+      "method": "semantic",
+      "n_total": 500,
+      "n_kept": 384,
+      "retention_ratio": 0.768,
+      "size_reduction_pct": 23.2,
+      "tau": 0.3625,
+      "fast_mode": true,
+      "full_source_avi_mb": 376.6776752471924,
+      "input_clip_mb": 28.612643241882324,
+      "sampled_mb": 22.253114700317383,
+      "clip_vs_sampled_reduction_pct": 22.226288175487596,
+      "tx_input_clip_s": 24.0020248,
+      "tx_sampled_s": 18.6672656,
+      "tx_full_avi_s": 315.980136,
+      "input_clip_video": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4_input_500fr.mp4",
+      "output_video": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4_sampled.mp4",
+      "manifest": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4_skip_manifest.json",
+      "debug_video": null,
+      "traffic_busy_fraction": 0.002,
+      "information_fraction": 0.9,
+      "retention_mode": "adaptive_v4",
+      "actual_retention_pct": 76.8,
+      "pipeline_style": {
+        "algorithm": "online",
+        "context_mode": "diverse",
+        "history_frames": 20,
+        "context_size": 4,
+        "stream_frames": true
+      },
+      "model_stack": {
+        "embedding_backbone": "efficientnet_b0",
+        "yolo_model": "yolov8s.pt",
+        "score_detector_interval": 8,
+        "yolo_imgsz": 416
+      },
+      "retention_policy": {
+        "min_retention_ratio": 0.15,
+        "max_retention_ratio": 0.85,
+        "soft_target_retention": 0.3,
+        "busy_objects_threshold": 3,
+        "busy_soft_retention_cap": 0.82,
+        "busy_min_retention_floor": 0.55,
+        "information_aware": true,
+        "traffic_busy_fraction": 0.002,
+        "information_fraction": 0.9
+      }
+    }
+  },
+  "compression_method": "paper_soft_edge + h264_annex (paper_aligned)",
+  "compression": {
+    "baseline_crf": 28,
+    "delivery_crf": 30,
+    "paper_edge_frames": 384,
+    "h264_annex_mb": 0.695
+  },
+  "compress": {
+    "original_mb": 22.253114700317383,
+    "compressed_mb": 1.2746572494506836,
+    "bandwidth_saving_pct": 94.27200521537551,
+    "tx_orig_s": 18.6672656,
+    "tx_comp_s": 1.06926,
+    "n_frames": 384,
+    "bitstream": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4.seccomp",
+    "h264_annex_mb": 0.6945476531982422
+  },
+  "decompress": {
+    "output_video": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4_recon.mp4",
+    "n_frames": 384,
+    "playback": "h264_annex"
+  },
+  "bitstream": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4.seccomp",
+  "bitstream_mb": 1.275,
+  "recon_mp4": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\DePere_10_19_2020_0700_0900_45to60_adaptive4_recon.mp4",
+  "sampled_baseline_mp4": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\original.mp4",
+  "compare": {
+    "debug_mp4": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\debug.mp4",
+    "original_mp4": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\outputs\\original.mp4",
+    "debug_mb": "0.695",
+    "original_mb": "1.003",
+    "debug_pct_of_original_mp4": "69.3"
+  },
+  "skip_config": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\config\\skip_default.yaml",
+  "compress_config": "C:\\Users\\Pedram\\Desktop\\Deng\\Compression Paper\\combination_paper_aligned\\config\\compress.yaml"
+}

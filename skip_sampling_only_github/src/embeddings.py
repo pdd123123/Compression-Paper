@@ -49,6 +49,12 @@ class FrameEmbedder:
             net = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
             net.fc = nn.Identity()
             return net, 512
+        if name == "efficientnet_b0":
+            net = models.efficientnet_b0(
+                weights=models.EfficientNet_B0_Weights.DEFAULT
+            )
+            net.classifier = nn.Identity()
+            return net, 1280
         raise ValueError(f"Unknown backbone: {name}")
 
     def _preprocess_tensor(self, frame_bgr: np.ndarray) -> torch.Tensor:

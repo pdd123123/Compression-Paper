@@ -37,6 +37,7 @@ class SamplerState:
     n_kept: int = 0
     score_stats: dict = field(default_factory=dict)
     traffic_busy_fraction: float = 0.0
+    information_fraction: float = 0.0
     prev_gray: np.ndarray | None = None
 
 
@@ -71,6 +72,7 @@ class SemanticSkipSampler:
         self.adaptive_flat_q = float(ad.get("flat_quantile", 0.68))
         self.soft_target_retention = float(ad.get("soft_target_retention", 0.35))
         self.traffic_aware_adaptive = bool(ad.get("traffic_aware", True))
+        self.information_aware_adaptive = bool(ad.get("information_aware", False))
         self.busy_soft_retention_cap = float(ad.get("busy_soft_retention_cap", 0.62))
         self.busy_min_retention_floor = float(ad.get("busy_min_retention_floor", 0.38))
         self.tau_warmup = int(sc.get("tau_warmup_frames", 120))
@@ -305,15 +307,28 @@ class SemanticSkipSampler:
         progress: PipelineProgress | None = None,
         frame_total: int | None = None,
     ) -> tuple[list[int], list[float]]:
-        """One pass: warmup then keep frames with score > tau (paper-style streaming)."""
+        """One streaming pass over the video.
+
+        target_ratio: score every frame in one pass, then calibrate tau for
+            exact target retention (same scores as online, accurate keep ratio).
+        adaptive: score every frame in one pass, then adaptive pick at end.
+        """
         self.reset()
         max_frames = video_cfg.get("max_frames")
         stride = int(video_cfg.get("frame_stride", 1))
         max_height = int(video_cfg.get("max_height") or 0)
         kept: list[int] = []
         scores: list[float] = []
+        feats: list[np.ndarray] = []
+        adaptive = self.retention_mode == "adaptive"
+        calibrate_after = self.retention_mode == "target_ratio"
+        stream_score_only = adaptive or calibrate_after
         if progress:
-            progress.begin_sub("Online score & keep", total=frame_total)
+            if stream_score_only:
+                label = "Stream score (online)"
+            else:
+                label = "Online score & keep"
+            progress.begin_sub(label, total=frame_total)
         it: Iterable = iter_video_frames(video_path, max_frames, stride)
         if progress:
             it = progress.iter(it, total=frame_total, desc="online", unit="fr")
@@ -322,12 +337,35 @@ class SemanticSkipSampler:
         for proc_idx, frame in it:
             if max_height > 0:
                 frame = resize_frame_max_height(frame, max_height)
-            keep, sc, _ = self.should_keep(frame, proc_idx)
-            scores.append(sc)
-            if keep:
-                kept.append(proc_idx)
+            if stream_score_only:
+                sc, _ = self.score_frame(frame, proc_idx)
+                scores.append(sc)
+                feats.append(self.state.history_feats[-1].copy())
+            else:
+                keep, sc, _ = self.should_keep(frame, proc_idx)
+                scores.append(sc)
+                if keep:
+                    kept.append(proc_idx)
         score_arr = np.array(scores, dtype=np.float64)
         self.state.score_stats = score_distribution_stats(score_arr)
+
+        if calibrate_after:
+            feat_mat = np.stack(feats, axis=0) if feats else None
+            if progress:
+                progress.done_sub(f"{len(scores)} frames scored")
+                progress.begin_sub("Calibrate tau for target retention")
+            elif show_progress:
+                print("Calibrate tau for target retention...", flush=True)
+            kept = self._select_target_ratio(score_arr, feat_mat)
+        elif adaptive:
+            feat_mat = np.stack(feats, axis=0) if feats else None
+            if progress:
+                progress.done_sub(f"{len(scores)} frames scored")
+                progress.begin_sub("Adaptive select from stream scores")
+            elif show_progress:
+                print("Adaptive select from stream scores...", flush=True)
+            kept = self._select_adaptive(score_arr, feat_mat)
+
         if progress:
             progress.done_sub(
                 f"kept {len(kept)}/{len(scores)} "
@@ -624,16 +662,56 @@ class SemanticSkipSampler:
         )
         return busy / len(objs)
 
+    def _information_fraction(self) -> float:
+        """0-1 clip richness from detections, object load, motion, and busy traffic."""
+        objs = self.state.frame_n_objects
+        motions = self.state.frame_motion
+        if not objs or len(objs) != len(motions):
+            return 0.0
+        n = len(objs)
+        detect_frac = sum(1 for o in objs if o >= 1) / n
+        multi_obj_frac = sum(1 for o in objs if o >= 2) / n
+        obj_load = sum(min(o, 6) for o in objs) / (6.0 * n)
+        busy_frac = sum(
+            1
+            for no, mo in zip(objs, motions)
+            if no >= self.busy_objects_threshold
+            and mo >= self.busy_motion_threshold
+        ) / n
+        motion_frac = sum(
+            1 for m in motions if m >= self.busy_motion_threshold * 0.5
+        ) / n
+        return float(
+            np.clip(
+                max(
+                    busy_frac,
+                    detect_frac * 0.9,
+                    multi_obj_frac * 0.85,
+                    obj_load * 0.8,
+                    motion_frac * 0.6,
+                ),
+                0.0,
+                1.0,
+            )
+        )
+
     def _effective_adaptive_retention_bounds(self, n: int) -> tuple[int, int, int]:
         """Return (n_min, soft_n, n_max) frame counts for adaptive selection."""
         busy_frac = self._traffic_busy_fraction() if self.traffic_aware_adaptive else 0.0
         self.state.traffic_busy_fraction = busy_frac
+        if self.information_aware_adaptive:
+            info_frac = self._information_fraction()
+            self.state.information_fraction = info_frac
+            adapt_frac = info_frac
+        else:
+            adapt_frac = busy_frac
+            self.state.information_fraction = 0.0
 
         min_r = self.min_retention
         soft_r = self.soft_target_retention
-        if busy_frac > 0.0:
-            soft_r = soft_r + busy_frac * (self.busy_soft_retention_cap - soft_r)
-            min_r = min_r + busy_frac * (self.busy_min_retention_floor - min_r)
+        if adapt_frac > 0.0:
+            soft_r = soft_r + adapt_frac * (self.busy_soft_retention_cap - soft_r)
+            min_r = min_r + adapt_frac * (self.busy_min_retention_floor - min_r)
         soft_r = float(np.clip(soft_r, min_r, self.max_retention - 0.02))
 
         n_min = max(1, int(round(n * min_r)))
