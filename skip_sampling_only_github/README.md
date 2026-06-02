@@ -1,8 +1,4 @@
-# Semantic skip sampling
 
-Frame selection for edge video: pretrained embeddings, YOLO class weights, and a score threshold. This folder is the minimal repo (two entry scripts only).
-
-## Setup
 
 ```cmd
 cd skip_sampling_only_github
