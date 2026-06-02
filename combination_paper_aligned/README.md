@@ -1,7 +1,4 @@
-# Skip sampling + paper-aligned compression (SkipComp combo)
 
-Same skip pipeline as `combination_simple`, but compression uses **`run_paper_aligned`** settings:
-soft-edge (Canny + K-means) in `.seccomp` + H.264 annex playback (CRF 30).
 
 ## Quick start
 
