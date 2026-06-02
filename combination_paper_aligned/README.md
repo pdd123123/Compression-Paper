@@ -20,13 +20,7 @@ Common flags: `--stem`, `-o outputs`, `--baseline-crf 28`, `--max-frames`, `--fi
 2. Compress — paper soft-edge + H.264 annex (`config/compress.yaml`)  
 3. Decompress — `{stem}_recon.mp4` (H.264 playback)
 
-## vs `combination_simple`
 
-| | `combination_simple` | `combination_paper_aligned` |
-|--|----------------------|----------------------------|
-| Compression | legacy delivery (CRF 26) | paper_aligned (soft-edge + CRF 30) |
-| Paper edge in bitstream | partial | yes (validated) |
-| Playback quality | good | matches `run_transmit` / `run_paper_aligned` |
 
 ## Layout
 
