@@ -1,15 +1,4 @@
-#!/usr/bin/env python3
-"""Fixed-retention semantic skip sampling (sample_2: same stack as adaptive v4).
 
-Shared with run_sample_adaptive_4.py (scoring / detection / pipeline only):
-- EfficientNet-B0 + YOLOv8s, online stream, K-means context
-
-Difference from v4:
-- retention_mode=target_ratio: user sets --retention (default 20%, paper-style)
-- After streaming scores, tau is calibrated on the full clip to hit that ratio closely
-
-Pair with v4 for fair comparison: same score, fixed vs adaptive keep rate.
-"""
 
 from __future__ import annotations
 
